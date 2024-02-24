@@ -93,27 +93,3 @@ def main():
 if __name__ == "__main__":
     main()
 
-# def main():
-#     st.title('CSV Generator')
-
-#     # Input fields
-#     input1 = st.text_input('Input 1', '')
-#     input2 = st.slider('Input 2', min_value=0, max_value=100, value=50)
-#     input3 = st.selectbox('Input 3', ['Option 1', 'Option 2', 'Option 3'])
-
-#     # Generate CSV button
-#     if st.button('Generate CSV'):
-#         # Process inputs and generate CSV content
-#         csv_content = generate_csv(input1, input2, input3)
-        
-#         # Display the CSV content
-#         st.text_area('CSV Output', value=csv_content, height=200)
-
-# def generate_csv(input1, input2, input3):
-#     # Process inputs and generate CSV content
-#     # For demonstration purposes, just concatenate inputs into a CSV-like string
-#     csv_content = f'Input 1,Input 2,Input 3\n{input1},{input2},{input3}'
-#     return csv_content
-
-# if __name__ == "__main__":
-#     main()
