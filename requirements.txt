@@ -3,5 +3,5 @@ pypng
 typing-extensions
 Pillow
 tbapy
-qrcode
+qrcode==7.3
 
