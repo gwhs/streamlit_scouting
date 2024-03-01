@@ -1,2 +1,7 @@
+CacheControl
+pypng
+typing-extensions
+Pillow
 tbapy
 qrcode
+
