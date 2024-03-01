@@ -2,6 +2,6 @@ CacheControl
 pypng
 typing-extensions
 Pillow
-tbapy
+tbapy==1.3.2
 qrcode==7.3
 
