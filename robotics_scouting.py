@@ -1,5 +1,9 @@
 import streamlit as st
 import tbapy
+import re
+import qrcode
+from PIL import Image
+from io import BytesIO
 
 #with match number and team position get robot number
 def generate_csv(scouter_initials, match_number, robot, team_number, human_player_toggle, no_show,
@@ -10,23 +14,27 @@ def generate_csv(scouter_initials, match_number, robot, team_number, human_playe
     
     return csv_content
 
-def get_robo(event,match_level,match_number,robot_pos):
+def extract_numbers(string):
+    numbers = re.findall(r'\d+', string)
+    return [int(num) for num in numbers][0]
+
+def get_robo(event,match_level,match_number,robot):
     api_key = '3hJGWwBnRwxPVXtFiThp8n1dEuuMgcOg0xMLm41dPNsgIbL7mKpeAZF11bTaUWR7'
     tba = tbapy.TBA(api_key)
     if match_level == "Quals":
         match_indicator = "_qm"+str(match_number)
     match = tba.match(key=event+match_indicator)
-    if str(robot_pos).startswith("Red"):
+    if str(robot).startswith("Red"):
         team_color = "red"
     else:
         team_color = "blue"
     team_list = match['alliances'][team_color]["team_keys"]
-    index = int(robot_pos[-1]) - 1 
+    index = int(robot[-1]) - 1 
     return team_list[index] 
 
 def main():
     st.set_page_config(layout="wide")
-    st.title("This is stupid")
+    st.title("Scouting")
     col1, col2, col3, col4, col5 = st.columns(5)
 
     with col1:
@@ -38,9 +46,10 @@ def main():
         match_number = st.number_input("Match Number",value=None,step=1)
         robot_pos = ["Red 1","Red 2","Red 3","Blue 1","Blue 2","Blue 3"]
         robot = st.selectbox("Robot",robot_pos)
-        val = 0
+        val = 1
         if robot and event_name and match_level and match_number:
-            val = get_robo(event_name,match_level,match_number,robot_pos)
+            val = get_robo(event_name,match_level,match_number,robot)[-4:]
+            val = extract_numbers(val)
         team_number = st.number_input("Team Number",value=val)
         human_player_toggle = st.toggle("Human Player at AMP")
         no_show = st.toggle("No Show")
@@ -84,10 +93,14 @@ def main():
         auto_mobility, auto_amp_scored, auto_amp_missed, auto_speaker_scored, auto_speaker_missed, auto_foul,
         cooperation, teleop_amp_scored, teleop_amp_missed, teleop_speaker_scored, teleop_speaker_missed, note_in_trap, teleop_foul,
         end_position, harmony, offensive_skill, defensive_skill, died, tipped_over, card, comments)
-        
+
         # Display the CSV content
         st.text_area('CSV Output', value=csv_content, height=200)
-        st.code(Path, language="python")
+        # st.code(Path, language="python")
+        img = qrcode.make(csv_content)
+        byte_io = BytesIO()
+        img.save(byte_io, format='PNG')
+        st.image(byte_io)
 
 
 if __name__ == "__main__":
